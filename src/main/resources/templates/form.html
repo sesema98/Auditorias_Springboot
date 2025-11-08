@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="container py-4">
+
+    <h1 class="text-secondary border-success border-top-0 border-left-0 border-right-0 border-bottom border-3 pb-2"
+        th:text="#{text.curso.titulo}">
+        Mantenimiento de Cursos
+    </h1>
+
+    <!-- Muestra mensajes de error generales -->
+    <div th:object="${curso}" th:remove="tag">
+        <ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger list-unstyled">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <!-- Formulario de creación/edición de cursos -->
+    <form th:action="@{/form}" th:object="${curso}" method="post">
+
+        <!-- Campo: Nombre -->
+        <div class="form-group row mb-3">
+            <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+            <div class="col-sm-6">
+                <input type="text" id="nombre" th:field="*{nombre}"
+                       class="form-control"
+                       th:errorclass="is-invalid" />
+                <small class="form-text text-danger"
+                       th:if="${#fields.hasErrors('nombre')}"
+                       th:errors="*{nombre}">
+                </small>
+            </div>
+        </div>
+
+        <!-- Campo: Créditos -->
+        <div class="form-group row mb-3">
+            <label for="creditos" class="col-sm-2 col-form-label">Créditos</label>
+            <div class="col-sm-6">
+                <input type="text" id="creditos" th:field="*{creditos}"
+                       class="form-control"
+                       th:errorclass="is-invalid" />
+                <small class="form-text text-danger"
+                       th:if="${#fields.hasErrors('creditos')}"
+                       th:errors="*{creditos}">
+                </small>
+            </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="form-group row mt-4">
+            <div class="col-sm-6 offset-sm-2">
+                <input type="submit" value="Crear Curso" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

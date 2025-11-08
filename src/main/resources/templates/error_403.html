@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso Denegado</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="bg-light">
+<div class="container py-5 text-center">
+    <div class="card shadow p-4">
+        <h2 class="text-danger mb-3">🚫 Acceso denegado</h2>
+        <p class="lead">No tienes permisos para acceder a esta página.</p>
+        <a class="btn btn-primary mt-3" th:href="@{/listar}">Volver al inicio</a>
+    </div>
+</div>
+</body>
+</html>

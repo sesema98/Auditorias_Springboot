@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Spring Boot - ' + ${titulo}">Spring Boot</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Tu CSS personalizado -->
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom">
+        <div class="container">
+            <!-- LOGO / Título -->
+            <a class="navbar-brand fs-4 fw-semibold text-white" th:href="@{/}">Spring Boot</a>
+
+            <!-- Botón colapsable -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarScroll" aria-controls="navbarScroll"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Contenido del navbar -->
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+
+                    <li class="nav-item">
+                        <a class="nav-link link-light" th:href="@{/}">Inicio</a>
+                    </li>
+
+                    <!-- Menú: Gestión Cursos -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Gestión Cursos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/listar}">Cursos</a></li>
+                            <li><a class="dropdown-item" href="#">Créditos</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Menú: Gestión Docente -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Gestión Docente
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/docente}">Docentes</a></li>
+                            <li><a class="dropdown-item" href="#">Especialidad</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Menú: Gestión Alumnos -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Gestión Alumnos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Alumnos</a></li>
+                            <li><a class="dropdown-item" href="#">Apoderado</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Formulario de búsqueda -->
+                    <form class="d-flex ms-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Buscar">
+                        <button class="btn btn-outline-light" type="submit">Búsqueda</button>
+                    </form>
+
+                    <!-- Botones de sesión -->
+                    <li class="nav-item ms-3" sec:authorize="isAnonymous()">
+                        <a class="btn btn-outline-light btn-sm" th:href="@{/signin}">Iniciar Sesión</a>
+                    </li>
+
+                    <li class="nav-item ms-2" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Contenido dinámico -->
+<div class="container mt-5 pt-5" th:fragment="content">
+    <!-- Aquí se inyectará el contenido de cada vista -->
+</div>
+
+<!-- Footer -->
+<footer th:fragment="footer" class="text-center py-4 mt-5 border-top">
+    <div class="container">
+        <p class="mb-1">
+            © 2025 Proyecto AOP Serva — <span class="text-success">Spring Boot + Thymeleaf</span>
+        </p>
+    </div>
+</footer>
+
+<!-- Scripts Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

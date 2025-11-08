@@ -2,80 +2,88 @@ package com.tecsup.aopserva.controllers;
 
 import com.tecsup.aopserva.domain.entities.Curso;
 import com.tecsup.aopserva.services.CursoService;
+
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.validation.BindingResult;
-import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import java.util.Map;
 
 @Controller
 @SessionAttributes("curso")
 public class CursoController {
 
-    @RequestMapping(value="/ver")
-    public String ver(Model model){
-        model.addAttribute("cursos", cursoService.listar());
-        model.addAttribute("titulo","Lista de cursos");
-
-        return "curso/ver";
-    }
-
     @Autowired
     private CursoService cursoService;
 
-    // Listar todos los cursos
+    // ✅ Listar cursos
     @GetMapping("/listar")
-    public String listarCurso(Model model) {
+    public String listar(Model model) {
+        model.addAttribute("titulo", "Listado de Cursos");
         model.addAttribute("cursos", cursoService.listar());
         return "listar";
     }
 
-    // Mostrar formulario para crear un nuevo curso
-    @GetMapping("/nuevo")
-    public String nuevoCurso(Model model) {
-        model.addAttribute("curso", new Curso());
-        return "formCurso";
+    // ✅ Crear nuevo curso
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/form")
+    public String crear(Map<String, Object> model) {
+        Curso curso = new Curso();
+        model.put("curso", curso);
+        return "form";
     }
 
-    // Guardar o actualizar un curso
-    @PostMapping("/guardar")
-    public String guardarCurso(@Valid @ModelAttribute("curso") Curso curso, BindingResult result, SessionStatus status) {
-        if (result.hasErrors()) {
-            return "formCurso";
+    // ✅ Editar curso existente
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/form/{id}")
+    public String editar(@PathVariable Integer id, Map<String, Object> model) {
+        Curso curso = null;
+
+        if (id > 0) {
+            curso = cursoService.buscar(id);
+        } else {
+            return "redirect:/listar";
         }
+
+        model.put("curso", curso);
+        return "form";
+    }
+
+    // ✅ Guardar curso (crear o actualizar)
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/form")
+    public String guardar(@Valid Curso curso, BindingResult result, Model model, SessionStatus status) {
+        if (result.hasErrors()) {
+            model.addAttribute("titulo", "Formulario de Curso");
+            return "form";
+        }
+
         cursoService.grabar(curso);
         status.setComplete();
         return "redirect:/listar";
     }
 
-    // Editar curso existente
-    @GetMapping("/editar/{id}")
-    public String editarCurso(@PathVariable("id") int id, Model model) {
-        Curso curso = cursoService.buscar(id);
-        if (curso != null) {
-            model.addAttribute("curso", curso);
-            return "formCurso"; // usa el mismo formulario
-        } else {
-            return "redirect:/listar";
-        }
-    }
-
-    // Eliminar curso
+    // ✅ Eliminar curso
+    @Secured("ROLE_ADMIN")
     @GetMapping("/eliminar/{id}")
-    public String eliminarCurso(@PathVariable("id") int id) {
+    public String eliminar(@PathVariable Integer id) {
         if (id > 0) {
             cursoService.eliminar(id);
         }
         return "redirect:/listar";
     }
 
-    // Vista adicional opcional (ver cursos)
+    // ✅ Ver cursos (versión adicional)
     @GetMapping("/ver")
-    public String verCursos(Model model) {
-        model.addAttribute("cursos", cursoService.listar());
+    public String ver(Model model) {
         model.addAttribute("titulo", "Lista de cursos");
+        model.addAttribute("cursos", cursoService.listar());
         return "curso/ver";
     }
 }
